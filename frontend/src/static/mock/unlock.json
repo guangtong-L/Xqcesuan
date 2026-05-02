@@ -1,0 +1,19 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "recordId": "rec_20260430_8f3a92c1",
+    "unlocked": true,
+    "deepContent": {
+      "monthTrend": "本月中旬前后会有一次需要做选择的小机会。",
+      "yearKeyword": ["稳中求进", "圈子拓展", "习惯重塑"],
+      "advice": [
+        "建立每周一次的复盘习惯。",
+        "在重要沟通前列三个关键问题。",
+        "每月预留一笔小额学习预算。"
+      ],
+      "compatibleZodiac": ["射手座", "白羊座"]
+    }
+  },
+  "traceId": "f3a1c9e2b4d847a6"
+}

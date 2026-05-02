@@ -1,0 +1,19 @@
+{
+  "containerPort": 80,
+  "minNum": 1,
+  "maxNum": 5,
+  "cpu": 0.5,
+  "mem": 1,
+  "policyType": "cpu",
+  "policyThreshold": 60,
+  "envParams": {
+    "SERVER_PORT": "80",
+    "SPRING_PROFILES_ACTIVE": "prod",
+    "TZ": "Asia/Shanghai",
+    "RATE_LIMIT_CALC_PER_MIN": "10"
+  },
+  "customLogs": "stdout",
+  "initialDelaySeconds": 20,
+  "buildDir": "",
+  "dockerfilePath": "Dockerfile"
+}

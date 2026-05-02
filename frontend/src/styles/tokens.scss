@@ -1,0 +1,226 @@
+/**
+ * 设计 Token（SCSS 变量 + Mixin）
+ * ------------------------------------------------------------------
+ * - 适用：极简星座/八字流年小程序，目标用户 18-35 岁女性
+ * - 视觉定位：轻量娱乐 + 治愈感（柔和紫主色 + 多辅助色辨识不同模块）
+ * - 用法：在页面 <style scoped> 顶部 `@use '@/styles/tokens.scss' as *;`
+ *        随后即可使用 `$color-primary`、`@include card-base;` 等
+ * - 约定：所有页面/组件不再写硬编码色值/字号/间距，统一走 token
+ * - 风险：tokens.scss 仅在编译期生效；如未来需要主题切换，可同时维护
+ *        App.vue :root 的同名 CSS 变量（已保留），运行时切换无须重编译
+ */
+
+/* ============================================================
+ * 1. 颜色（Color）
+ * ============================================================ */
+// 主色（紫色基调，治愈 + 神秘）
+$color-primary:        #7c5cff;       // 主色
+$color-primary-light:  #ede8ff;       // 主色浅底（chip / tag 背景）
+$color-primary-soft:   #b39dff;       // 主色渐变末端
+$color-primary-deep:   #5a3fd6;       // 主色按压态
+
+// 模块辅助色（按业务语义区分页面）
+$color-love:    #ff5da6;              // 爱情 / 匹配 / 上上签
+$color-health:  #51c878;              // 健康 / 宜
+$color-wealth:  #f0ad4e;              // 财运 / 警示
+$color-career:  #4a90e2;              // 事业 / 冬季
+$color-danger:  #ff6b6b;              // 错误 / 忌 / 删除（比 #ff5050 柔和）
+
+// 季节色（八字流年专用）
+$color-spring:  #51c878;              // 春绿
+$color-summer:  #ff8e3c;              // 夏橙
+$color-autumn:  #d4a017;              // 秋金
+$color-winter:  #4a90e2;              // 冬蓝
+
+// 文字色（4 档）
+$color-text:        #1f1f24;          // h1 / 强调
+$color-text-strong: #333333;          // h2 / 正文加重
+$color-text-body:   #555555;          // 正文
+$color-text-sub:    #888888;          // 辅助说明
+$color-text-mute:   #aaaaaa;          // 极弱（仅用于白底，对比度 4.5:1）
+
+// 背景色
+$color-bg:         #f7f7fa;           // 页面底色
+$color-card:       #ffffff;           // 卡片底色
+$color-divider:    #f0f0f5;           // 分割线 / chip 底
+$color-divider-light: #f5f5f8;        // 更浅分割
+
+/* ============================================================
+ * 2. 字号阶梯（rpx）
+ * ============================================================ */
+$fs-xs:    22rpx;     // 免责声明 / 极弱辅助
+$fs-sm:    24rpx;     // 辅助文字 / chip
+$fs-md:    26rpx;     // 正文小
+$fs-base:  28rpx;     // 正文（默认）
+$fs-lg:    30rpx;     // 卡片标题
+$fs-xl:    32rpx;     // 小标题 / 主按钮
+$fs-2xl:   36rpx;     // 大标题 / 评分
+$fs-3xl:   48rpx;     // hero 数字
+$fs-display: 96rpx;   // 仪式感数字（匹配评分等）
+
+/* ============================================================
+ * 3. 字重
+ * ============================================================ */
+$fw-normal:  400;
+$fw-medium:  500;
+$fw-semi:    600;
+$fw-bold:    700;
+
+/* ============================================================
+ * 4. 行高
+ * ============================================================ */
+$lh-tight:   1.4;
+$lh-base:    1.6;
+$lh-loose:   1.8;
+
+/* ============================================================
+ * 5. 圆角阶梯
+ * ============================================================ */
+$radius-sm:  12rpx;     // tag / chip
+$radius-md:  16rpx;     // input / 小卡
+$radius-lg:  24rpx;     // 卡片（默认）
+$radius-xl:  32rpx;     // hero / 大型容器
+$radius-pill: 999rpx;   // 胶囊按钮
+
+/* ============================================================
+ * 6. 间距阶梯
+ * ============================================================ */
+$space-1:  4rpx;
+$space-2:  8rpx;
+$space-3:  16rpx;       // 卡内紧凑间距
+$space-4:  24rpx;       // 默认 block 内间距
+$space-5:  32rpx;       // block 间隔（默认）
+$space-6:  48rpx;       // 大区段间隔
+
+/* ============================================================
+ * 7. 阴影（3 档：轻 / 中 / 重）
+ * ============================================================ */
+// 用于普通卡片悬浮感（极轻）
+$shadow-sm: 0 2rpx 8rpx rgba(31, 31, 36, 0.04);
+// 用于 hero / 重要 CTA
+$shadow-md: 0 8rpx 24rpx rgba(124, 92, 255, 0.12);
+// 用于浮层 / 按钮高亮态
+$shadow-lg: 0 12rpx 40rpx rgba(124, 92, 255, 0.18);
+
+/* ============================================================
+ * 8. 过渡
+ * ============================================================ */
+$transition-fast: 0.2s ease;
+$transition-base: 0.3s ease;
+$transition-slow: 0.6s ease;
+
+/* ============================================================
+ * 9. Mixin（复用样式）
+ * ============================================================ */
+
+/* 默认卡片（白底 + 大圆角 + 轻阴影 + 默认内边距） */
+@mixin card-base {
+  background: $color-card;
+  border-radius: $radius-lg;
+  padding: $space-4 $space-4 + 4rpx;     // 24 / 28
+  box-shadow: $shadow-sm;
+}
+
+/* hero 卡片（大圆角 + 中阴影） */
+@mixin card-hero {
+  border-radius: $radius-xl;
+  padding: $space-6 $space-5;
+  box-shadow: $shadow-md;
+}
+
+/* 主按钮（紫色胶囊） */
+@mixin btn-primary {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-soft 100%);
+  color: #fff;
+  border-radius: $radius-pill;
+  font-size: $fs-xl;
+  font-weight: $fw-semi;
+  padding: 22rpx 0;
+  box-shadow: $shadow-md;
+  transition: opacity $transition-fast;
+  &[disabled],
+  &.disabled {
+    background: #d4d4dc;
+    box-shadow: none;
+    color: #fff;
+  }
+  &:active {
+    opacity: 0.85;
+  }
+}
+
+/* 次按钮（白底 + 主色文字） */
+@mixin btn-secondary {
+  background: #fff;
+  color: $color-primary;
+  border-radius: $radius-pill;
+  font-size: $fs-base;
+  font-weight: $fw-medium;
+  padding: 18rpx 0;
+  box-shadow: $shadow-sm;
+}
+
+/* 文字按钮（无背景） */
+@mixin btn-text {
+  background: transparent;
+  color: $color-primary;
+  font-size: $fs-base;
+  padding: 12rpx 24rpx;
+}
+
+/* 标题层级 */
+@mixin title-h1 {
+  font-size: $fs-2xl;
+  font-weight: $fw-bold;
+  color: $color-text;
+  line-height: $lh-tight;
+}
+@mixin title-h2 {
+  font-size: $fs-xl;
+  font-weight: $fw-semi;
+  color: $color-text;
+  line-height: $lh-tight;
+}
+@mixin title-h3 {
+  font-size: $fs-lg;
+  font-weight: $fw-semi;
+  color: $color-text-strong;
+  line-height: $lh-tight;
+}
+/* 小节标题（卡片上方独立标题） */
+@mixin title-section {
+  display: block;
+  font-size: $fs-base;
+  font-weight: $fw-semi;
+  color: $color-text-strong;
+  margin: $space-5 0 $space-3;
+}
+
+/* 免责声明（页面底部统一样式） */
+@mixin disclaimer {
+  display: block;
+  text-align: center;
+  color: $color-text-mute;
+  font-size: $fs-xs;
+  margin-top: $space-5;
+  line-height: $lh-base;
+}
+
+/* hero 紫色渐变背景（保留主色调，但通过页面装饰元素区分） */
+@mixin hero-gradient-purple {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-soft 100%);
+  color: #fff;
+}
+
+/* 浅色卡片（柔和粉调，用于"我的"页头像区，避免与首页重复） */
+@mixin hero-soft-pink {
+  background: linear-gradient(135deg, #fff5f9 0%, #fdeef5 100%);
+  color: $color-text;
+}
+
+/* 信息行（label + value 横排，常用于设置项） */
+@mixin row-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

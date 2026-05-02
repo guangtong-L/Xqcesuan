@@ -1,0 +1,25 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "recordId": "rec_20260430_8f3a92c1",
+    "date": "2026-04-30",
+    "zodiac": "狮子座",
+    "score": 82,
+    "level": "吉",
+    "summary": "今天整体节奏明快，适合推进搁置已久的小事。",
+    "dimensions": [
+      { "key": "love", "name": "爱情", "score": 78, "text": "与亲近的人多一些坦诚交流。" },
+      { "key": "career", "name": "事业", "score": 85, "text": "执行力在线，适合处理需要专注的任务。" },
+      { "key": "wealth", "name": "财运", "score": 70, "text": "日常开销保持理性，避免冲动消费。" },
+      { "key": "health", "name": "健康", "score": 80, "text": "适当增加户外活动，注意肩颈放松。" }
+    ],
+    "yi": ["早睡", "整理桌面", "联系老朋友"],
+    "ji": ["熬夜", "冲动下单"],
+    "lucky": { "color": "天空蓝", "colorHex": "#7EC8E3", "number": 7, "direction": "东南" },
+    "hasDeepContent": true,
+    "unlocked": false,
+    "tips": "本结果仅供娱乐参考，不构成任何决策建议。"
+  },
+  "traceId": "f3a1c9e2b4d847a6"
+}

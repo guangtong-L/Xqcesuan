@@ -1,0 +1,48 @@
+{
+    "name" : "今日运势",
+    "appid" : "",
+    "description" : "极简星座/八字流年运势测算",
+    "versionName" : "1.0.0",
+    "versionCode" : "100",
+    "transformPx" : false,
+    "app-plus" : {
+        "usingComponents" : true,
+        "nvueStyleCompiler" : "uni-app",
+        "compilerVersion" : 3,
+        "splashscreen" : {
+            "alwaysShowBeforeRender" : true,
+            "waiting" : true,
+            "autoclose" : true,
+            "delay" : 0
+        },
+        "modules" : {},
+        "distribute" : {
+            "android" : { "permissions" : [] },
+            "ios" : {},
+            "sdkConfigs" : {}
+        }
+    },
+    "quickapp" : {},
+    "mp-weixin" : {
+        "appid" : "wxXXXXXXXXXXXXXXXX",
+        "setting" : {
+            "urlCheck" : false,
+            "es6" : true,
+            "minified" : true,
+            "postcss" : true
+        },
+        "usingComponents" : true,
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "用于推算所在地节气与方位（可拒绝）"
+            }
+        },
+        "requiredPrivateInfos" : [],
+        "lazyCodeLoading" : "requiredComponents"
+    },
+    "h5" : {
+        "title" : "今日运势",
+        "router" : { "mode" : "hash", "base" : "./" }
+    },
+    "vueVersion" : "3"
+}

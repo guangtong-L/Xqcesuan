@@ -1,0 +1,36 @@
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+spring:
+  application:
+    name: fortune-backend
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  jackson:
+    time-zone: Asia/Shanghai
+    date-format: yyyy-MM-dd HH:mm:ss
+    default-property-inclusion: non_null
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+logging:
+  level:
+    root: INFO
+    com.fortune: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [%X{traceId}] %-5level %logger{36} - %msg%n"
+
+# 业务自定义
+fortune:
+  rate-limit:
+    calc-per-min: ${RATE_LIMIT_CALC_PER_MIN:10}
+    unlock-per-min: ${RATE_LIMIT_UNLOCK_PER_MIN:5}
+  history:
+    max-per-user: 30
+  token:
+    expire-days: 7

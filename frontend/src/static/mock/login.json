@@ -1,0 +1,11 @@
+{
+  "code": 0,
+  "message": "ok",
+  "data": {
+    "openid": "mock_openid_8f3a92c1",
+    "token": "mock_token_8f3a92c1_1714464000",
+    "expireAt": "2026-05-07T10:00:00+08:00",
+    "isNew": true
+  },
+  "traceId": "f3a1c9e2b4d847a6"
+}

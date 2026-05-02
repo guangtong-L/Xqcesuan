@@ -1,0 +1,79 @@
+{
+    "pages": [
+        {
+            "path": "pages/index/index",
+            "style": {
+                "navigationBarTitleText": "今日运势",
+                "enablePullDownRefresh": false
+            }
+        },
+        {
+            "path": "pages/calc/calc",
+            "style": {
+                "navigationBarTitleText": "信息录入"
+            }
+        },
+        {
+            "path": "pages/result/result",
+            "style": {
+                "navigationBarTitleText": "今日运势详情"
+            }
+        },
+        {
+            "path": "pages/history/history",
+            "style": {
+                "navigationBarTitleText": "历史记录"
+            }
+        },
+        {
+            "path": "pages/mine/mine",
+            "style": {
+                "navigationBarTitleText": "我的"
+            }
+        },
+        {
+            "path": "pages/bazi/bazi",
+            "style": {
+                "navigationBarTitleText": "八字流年"
+            }
+        },
+        {
+            "path": "pages/match/match",
+            "style": {
+                "navigationBarTitleText": "星座匹配"
+            }
+        },
+        {
+            "path": "pages/sign/sign",
+            "style": {
+                "navigationBarTitleText": "今日幸运签"
+            }
+        }
+    ],
+    "globalStyle": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "今日运势",
+        "navigationBarBackgroundColor": "#ffffff",
+        "backgroundColor": "#f7f7fa"
+    },
+    "tabBar": {
+        "color": "#999999",
+        "selectedColor": "#7c5cff",
+        "backgroundColor": "#ffffff",
+        "borderStyle": "black",
+        "list": [
+            {
+                "pagePath": "pages/index/index",
+                "text": "首页"
+            },
+            {
+                "pagePath": "pages/history/history",
+                "text": "历史"
+            },
+            {
+                "pagePath": "pages/mine/mine",
+                "text": "我的"
+            }
+        ]
+    }
+}

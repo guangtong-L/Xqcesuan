@@ -1,0 +1,19 @@
+.DS_Store
+.idea/
+.vscode/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Backend
+backend/target/
+backend/*.log
+
+# Logs
+*.log
+logs/
+
+# OS temp files
+Thumbs.db
+Desktop.ini

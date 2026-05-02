@@ -1,0 +1,17 @@
+{
+  "colors": [
+    {"name":"天空蓝","hex":"#7EC8E3"},
+    {"name":"米杏","hex":"#E8DCC4"},
+    {"name":"豆沙粉","hex":"#E5A1A1"},
+    {"name":"草木绿","hex":"#7BA17D"},
+    {"name":"暖橘","hex":"#F5A25D"},
+    {"name":"奶油黄","hex":"#F8E3A1"},
+    {"name":"雾紫","hex":"#B6A3C8"},
+    {"name":"晨灰","hex":"#C9C9C9"},
+    {"name":"湖蓝","hex":"#5B9BD5"},
+    {"name":"枫叶红","hex":"#C85C5C"},
+    {"name":"墨黑","hex":"#2E2E2E"},
+    {"name":"云白","hex":"#FAFAFA"}
+  ],
+  "directions": ["东","南","西","北","东南","东北","西南","西北"]
+}
