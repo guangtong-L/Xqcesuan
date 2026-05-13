@@ -35,6 +35,7 @@ const MOCK_MAP: Record<string, () => Promise<{ default: ApiResponse<unknown> }>>
   'POST /api/fortune/calc': () => import('@/static/mock/calc.json'),
   'GET /api/fortune/history': () => import('@/static/mock/history.json'),
   'POST /api/fortune/unlock': () => import('@/static/mock/unlock.json'),
+  'GET /api/fortune/sign': () => import('@/static/mock/sign.json'),
   // 删除接口直接构造响应，无需 JSON
 }
 

@@ -7,6 +7,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useUserStore } from '@/store/user'
 import { track } from '@/utils/tracker'
 import { removeStorage } from '@/utils/storage'
+import { clearSignHistory } from '@/utils/signHistory'
 import AdBanner from '@/components/AdBanner/index.vue'
 import { ADS } from '@/config/ads'
 
@@ -17,7 +18,7 @@ const defaultAvatar = '/static/icons/avatar-default.png'
 const wxNickname = ref('')
 const wxAvatar = ref('')
 
-const showName = computed(() => wxNickname.value || userStore.profile?.nickname || '小星友')
+const showName = computed(() => wxNickname.value || '签友')
 const showAvatar = computed(() => wxAvatar.value || defaultAvatar)
 
 onMounted(() => {
@@ -41,8 +42,8 @@ function onLogin() {
 }
 
 function onEditProfile() {
-  track('mine_profile_click')
-  uni.navigateTo({ url: '/pages/calc/calc' })
+  track('mine_draw_click')
+  uni.switchTab({ url: '/pages/index/index' })
 }
 
 function onSubscribeToggle(e: any) {
@@ -62,12 +63,13 @@ function onClearCache() {
   track('mine_clear_cache_click')
   uni.showModal({
     title: '清除缓存',
-    content: '将清除本地资料、签到记录与缓存运势，确定吗？',
+    content: '将清除签到天数与抽签记录，确定吗？',
     success: (r) => {
       if (!r.confirm) return
       removeStorage('user_profile')
       removeStorage('fortune_current')
       removeStorage('sign_in')
+      clearSignHistory()
       userStore.logout()
       uni.showToast({ title: '已清除', icon: 'success' })
     }
@@ -113,17 +115,17 @@ function onFeedback() {
 
     <!-- 签到 -->
     <view class="mine__signin">
-      <text>已连续签到 {{ userStore.signInDays }} 天</text>
+        <text>已连续签到 {{ userStore.signInDays }} 天</text>
     </view>
 
     <!-- 设置项 -->
     <view class="mine__group">
       <view class="mine__row" @click="onEditProfile">
-        <text>我的资料</text>
+        <text>去抽今日签</text>
         <text class="mine__row-arrow">›</text>
       </view>
       <view class="mine__row">
-        <text>每日运势提醒</text>
+        <text>每日一签提醒</text>
         <switch :checked="subscribeOn" @change="onSubscribeToggle" />
       </view>
       <view class="mine__row" @click="onClearCache">

@@ -20,6 +20,8 @@
 
 import { track } from './tracker'
 
+declare const wx: any
+
 const STORAGE_KEY_INTERSTITIAL = 'lastInterstitialDate'
 const STORAGE_KEY_LAUNCH_TIME = '__app_launch_ts'
 

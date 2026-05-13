@@ -126,6 +126,10 @@ function onSaveImage() {
   uni.showToast({ title: '保存图片功能开发中', icon: 'none' })
 }
 
+function goCalc() {
+  uni.redirectTo({ url: '/pages/calc/calc' })
+}
+
 /**
  * 离开页面触发插屏（每日 N 次频控 + 启动 5s 内静默，逻辑封装在 utils/ad.ts）
  */
@@ -239,7 +243,7 @@ defineExpose({ onShareAppMessage })
 
     <view v-else class="result__empty">
       <text>还没有运势数据，先去填写信息吧～</text>
-      <button class="result__btn result__btn--primary" @click="uni.redirectTo({ url: '/pages/calc/calc' })">去填写</button>
+      <button class="result__btn result__btn--primary" @click="goCalc">去填写</button>
     </view>
   </view>
 </template>

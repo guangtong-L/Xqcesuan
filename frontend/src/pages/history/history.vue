@@ -1,77 +1,53 @@
 <script setup lang="ts">
 /**
- * 历史记录页：分页 + 删除单条 + 清空 + 信息流广告每 5 条插一个
+ * 抽签记录页：本地记录 + 删除单条 + 清空
  * 影响平台：H5 / 微信小程序
  */
-import { onMounted, ref, computed } from 'vue'
-import { getHistoryList, deleteHistory, clearHistory } from '@/api/fortune'
-import type { HistoryItem } from '@/api/types'
+import { computed, onMounted, ref } from 'vue'
+import {
+  clearSignHistory,
+  deleteSignHistory,
+  listSignHistory,
+  type SignHistoryItem
+} from '@/utils/signHistory'
 import { track } from '@/utils/tracker'
 import AdBanner from '@/components/AdBanner/index.vue'
 import { ADS } from '@/config/ads'
 
-const list = ref<HistoryItem[]>([])
-const total = ref(0)
-const page = ref(1)
-const pageSize = 10
-const loading = ref(false)
-const finished = ref(false)
+const list = ref<SignHistoryItem[]>([])
 
-const showEmpty = computed(() => !loading.value && list.value.length === 0)
+const total = computed(() => list.value.length)
+const showEmpty = computed(() => list.value.length === 0)
 
 onMounted(() => {
-  loadFirst()
+  refresh()
+  track('history_view', { total: total.value, activity: 'daily_sign' })
+  if (list.value.length === 0) track('history_empty_view')
 })
 
-async function loadFirst() {
-  page.value = 1
-  finished.value = false
-  list.value = []
-  await loadMore()
-  track('history_view', { total: total.value })
-  if (list.value.length === 0) track('history_empty_view')
+function refresh() {
+  list.value = listSignHistory()
 }
 
-async function loadMore() {
-  if (loading.value || finished.value) return
-  loading.value = true
-  try {
-    const data = await getHistoryList({ page: page.value, pageSize })
-    list.value.push(...data.list)
-    total.value = data.total
-    if (list.value.length >= total.value || data.list.length < pageSize) {
-      finished.value = true
-    } else {
-      page.value++
-    }
-  } catch (e: any) {
-    uni.showToast({ title: e?.message || '加载失败', icon: 'none' })
-  } finally {
-    loading.value = false
-  }
+function onItemClick(item: SignHistoryItem) {
+  track('history_item_click', { recordId: item.recordId, signName: item.signName })
+  uni.showModal({
+    title: `第 ${item.signNo} 签 · ${item.signName}`,
+    content: item.summary,
+    showCancel: false
+  })
 }
 
-function onItemClick(item: HistoryItem) {
-  track('history_item_click', { recordId: item.recordId })
-  // 历史记录点击后跳结果页（只读模式由 store 控制）
-  uni.navigateTo({ url: '/pages/result/result' })
-}
-
-function onDelete(item: HistoryItem) {
+function onDelete(item: SignHistoryItem) {
   track('history_delete_click', { recordId: item.recordId })
   uni.showModal({
     title: '确认删除',
     content: '删除后不可恢复，确认吗？',
-    success: async (r) => {
+    success: (r) => {
       if (!r.confirm) return
-      try {
-        await deleteHistory(item.recordId)
-        list.value = list.value.filter((x) => x.recordId !== item.recordId)
-        total.value = Math.max(0, total.value - 1)
-        uni.showToast({ title: '已删除', icon: 'success' })
-      } catch (e: any) {
-        uni.showToast({ title: e?.message || '删除失败', icon: 'none' })
-      }
+      deleteSignHistory(item.recordId)
+      refresh()
+      uni.showToast({ title: '已删除', icon: 'success' })
     }
   })
 }
@@ -81,35 +57,24 @@ function onClearAll() {
   track('history_clear_click', { total: total.value })
   uni.showModal({
     title: '确认清空',
-    content: '所有历史记录将被清空，且不可恢复。',
+    content: '所有抽签记录将被清空，且不可恢复。',
     confirmColor: '#ff5050',
-    success: async (r) => {
+    success: (r) => {
       if (!r.confirm) return
-      try {
-        await clearHistory()
-        list.value = []
-        total.value = 0
-        finished.value = true
-        uni.showToast({ title: '已清空', icon: 'success' })
-      } catch (e: any) {
-        uni.showToast({ title: e?.message || '清空失败', icon: 'none' })
-      }
+      clearSignHistory()
+      refresh()
+      uni.showToast({ title: '已清空', icon: 'success' })
     }
   })
 }
 
-// 触底加载（页面级 onReachBottom 在 uni-app 中通过页面生命周期）
-defineExpose({
-  onReachBottom: loadMore
-})
+function goHome() {
+  uni.switchTab({ url: '/pages/index/index' })
+}
 
-/**
- * 纯展示工具：level 文案 → 卡片样式 modifier
- * 仅供样式使用，不影响接口与逻辑
- */
 function levelClass(level: string): 'top' | 'good' | 'plain' {
-  if (level === '大吉' || level === '上上签') return 'top'
-  if (level === '吉' || level === '上签' || level === '小吉') return 'good'
+  if (level === '上上签') return 'top'
+  if (level === '上签') return 'good'
   return 'plain'
 }
 </script>
@@ -117,42 +82,37 @@ function levelClass(level: string): 'top' | 'good' | 'plain' {
 <template>
   <view class="history">
     <view class="history__header">
-      <text class="history__title">历史记录（共 {{ total }} 条）</text>
+      <text class="history__title">抽签记录（共 {{ total }} 条）</text>
       <text v-if="list.length > 0" class="history__clear" @click="onClearAll">清空</text>
     </view>
 
     <view v-if="showEmpty" class="history__empty">
-      <text class="history__empty-emoji">🌙</text>
-      <text class="history__empty-text">还没有记录哦，去测一次吧～</text>
-      <button class="history__empty-btn" @click="uni.switchTab({ url: '/pages/index/index' })">去首页</button>
+      <text class="history__empty-emoji">🎋</text>
+      <text class="history__empty-text">还没有抽签记录，去抽今日签吧～</text>
+      <button class="history__empty-btn" @click="goHome">去抽签</button>
     </view>
 
     <view v-else class="history__list">
       <template v-for="(item, idx) in list" :key="item.recordId">
-        <!-- UI 优化：根据 level 给左侧加色条（大吉粉 / 吉紫 / 平灰） -->
         <view
           class="history__item"
-          :class="`history__item--${levelClass(item.level)}`"
+          :class="`history__item--${levelClass(item.signName)}`"
           @click="onItemClick(item)"
         >
           <view class="history__item-left">
             <text class="history__item-date">{{ item.date }}</text>
             <text class="history__item-summary">{{ item.summary }}</text>
-            <text class="history__item-meta">{{ item.zodiac }} · {{ item.level }}</text>
+            <text class="history__item-meta">第 {{ item.signNo }} 签 · {{ item.signName }}</text>
           </view>
           <view class="history__item-right">
-            <text class="history__item-score">{{ item.score }}</text>
+            <text class="history__item-score">{{ item.signName.slice(0, 1) }}</text>
             <text class="history__item-del" @click.stop="onDelete(item)">删除</text>
           </view>
         </view>
-        <!-- 每 5 条插一个信息流广告 -->
         <view v-if="(idx + 1) % 5 === 0" class="history__ad">
           <AdBanner :unit-id="ADS.HISTORY_NATIVE" />
         </view>
       </template>
-
-      <view v-if="loading" class="history__loading">加载中…</view>
-      <view v-else-if="finished && list.length > 0" class="history__finished">没有更多啦</view>
     </view>
   </view>
 </template>
@@ -163,7 +123,6 @@ function levelClass(level: string): 'top' | 'good' | 'plain' {
 .history {
   padding: $space-5;
 
-  /* ========== 头部 ========== */
   &__header {
     @include row-flex;
     margin-bottom: $space-4;
@@ -180,7 +139,6 @@ function levelClass(level: string): 'top' | 'good' | 'plain' {
     padding: $space-2 $space-3;
   }
 
-  /* ========== 空状态 ========== */
   &__empty {
     text-align: center;
     padding: 160rpx 0;
@@ -205,7 +163,6 @@ function levelClass(level: string): 'top' | 'good' | 'plain' {
     line-height: 80rpx;
   }
 
-  /* ========== 列表 ========== */
   &__list {
     display: flex;
     flex-direction: column;
@@ -220,8 +177,6 @@ function levelClass(level: string): 'top' | 'good' | 'plain' {
     border-left: 6rpx solid $color-divider;
     transition: transform $transition-fast;
     &:active { transform: scale(0.99); }
-
-    /* level → 左色条 */
     &--top   { border-left-color: $color-love; }
     &--good  { border-left-color: $color-primary; }
     &--plain { border-left-color: $color-text-mute; }
@@ -242,7 +197,6 @@ function levelClass(level: string): 'top' | 'good' | 'plain' {
     font-size: $fs-md;
     color: $color-text-body;
     line-height: $lh-base;
-    /* 治愈风：长文本截断 */
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
@@ -250,7 +204,6 @@ function levelClass(level: string): 'top' | 'good' | 'plain' {
     -webkit-box-orient: vertical;
   }
   &__item-meta {
-    /* 改用 sub 而非 mute，提升可读性 */
     font-size: $fs-xs;
     color: $color-text-sub;
   }
@@ -274,15 +227,8 @@ function levelClass(level: string): 'top' | 'good' | 'plain' {
     border-radius: $radius-sm;
     background: rgba(255, 107, 107, 0.08);
   }
-
   &__ad {
     margin: $space-2 0;
-  }
-  &__loading, &__finished {
-    text-align: center;
-    color: $color-text-sub;
-    font-size: $fs-sm;
-    padding: $space-4 0;
   }
 }
 </style>

@@ -3,18 +3,7 @@
  * 上线后可对接 ALS / 自建上报
  */
 
-export type TrackEvent =
-  | 'page_view'
-  | 'click_calc'
-  | 'click_card'
-  | 'submit_profile'
-  | 'click_unlock'
-  | 'unlock_success'
-  | 'unlock_skip'
-  | 'click_share'
-  | 'click_save_image'
-  | 'history_delete'
-  | 'history_clear'
+export type TrackEvent = string
 
 /**
  * 上报埋点
